@@ -1,0 +1,46 @@
+services:
+  web:
+    build: .
+    container_name: imagelab-service
+    ports:
+      - "8000:8000"        # host:container
+    volumes:
+      - ${UPLOAD_DIR:-/web/mypath/uploaded}:/data  # <--- монтируем папку с картинками из переменной окружения
+      - ${STORAGE_PHOTO_PATH:-/mnt/orders/photos}:/storage_photo  # <--- папка StoragePhoto (путь из .env)
+      - ${STORAGE_PATH:-/mnt/orders/posters}:/storage  # <--- папка Storage (путь из .env)
+      - ./logs:/app/logs     # <--- монтируем папку logs для доступа к логам на хосте
+    env_file:
+      - .env
+    restart: unless-stopped
+    # user: "1001:1001" # <--- устанавливаем пользователя и группу для контейнера
+    depends_on:
+      - companion
+
+  companion:
+    build:
+      context: ./companion
+      dockerfile: Dockerfile
+    container_name: imagelab-companion
+    ports:
+      - "3020:3020"        # Companion port
+    volumes:
+      - companion-data:/tmp/companion  # Temporary storage for Companion
+    env_file:
+      - .env
+    restart: unless-stopped
+    environment:
+      - COMPANION_PORT=3020
+      - COMPANION_PROTOCOL=${COMPANION_PROTOCOL:-http}
+      - COMPANION_DOMAIN=${COMPANION_DOMAIN:-localhost:3020}
+      - COMPANION_SECRET=${COMPANION_SECRET:-change-me-in-production}
+      - COMPANION_ALLOWED_HOSTS=${COMPANION_ALLOWED_HOSTS:-}
+      - COMPANION_DATADIR=/tmp/companion
+      - COMPANION_GOOGLE_KEY=${COMPANION_GOOGLE_KEY:-}
+      - COMPANION_GOOGLE_SECRET=${COMPANION_GOOGLE_SECRET:-}
+      - COMPANION_DROPBOX_KEY=${COMPANION_DROPBOX_KEY:-}
+      - COMPANION_DROPBOX_SECRET=${COMPANION_DROPBOX_SECRET:-}
+      - COMPANION_ONEDRIVE_KEY=${COMPANION_ONEDRIVE_KEY:-}
+      - COMPANION_ONEDRIVE_SECRET=${COMPANION_ONEDRIVE_SECRET:-}
+
+volumes:
+  companion-data:

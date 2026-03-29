@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{MULTIUSER_TITLE}}</title>
+    <meta charset="utf-8" />
+    <link href="/imagelab/static/styles.css" rel="stylesheet" />
+    <!-- Styles moved to /imagelab/static/styles.css -->
+  </head>
+  <body
+    data-test-secret="{{TEST_FORM_SEKRET}}"
+    data-status-no-files="{{MULTIUSER_STATUS_NO_FILES}}"
+    data-status-running="{{MULTIUSER_STATUS_RUNNING}}"
+    data-status-completed="{{MULTIUSER_STATUS_COMPLETED}}"
+    data-report-user-id="{{MULTIUSER_REPORT_USER_ID}}"
+    data-report-file-format="{{MULTIUSER_REPORT_FILE_FORMAT}}"
+    data-report-total-format="{{MULTIUSER_REPORT_TOTAL_FORMAT}}"
+    data-status-ok="{{MULTIUSER_STATUS_OK}}"
+    data-status-error="{{MULTIUSER_STATUS_ERROR}}"
+  >
+    <div class="multiuser-container">
+      <h2>{{MULTIUSER_TITLE}}</h2>
+      <p>
+        {{MULTIUSER_DESCRIPTION}}
+      </p>
+      <div class="row">
+        <label for="file-input">{{MULTIUSER_LABEL_IMAGES_POOL}}</label>
+        <input
+          type="file"
+          id="file-input"
+          name="files"
+          accept=".jpg,.jpeg,.png,.gif,.tif,.psd,.zip,.heic,.dng"
+          multiple
+          required
+        />
+      </div>
+      <div class="row">
+        <label for="users-count-input">{{MULTIUSER_LABEL_USERS_COUNT}}</label>
+        <input
+          type="number"
+          id="users-count-input"
+          name="usersCount"
+          min="1"
+          value="1"
+        />
+      </div>
+      <div class="row">
+        <label for="user-ids-input">{{MULTIUSER_LABEL_USER_IDS}}</label>
+        <input
+          type="text"
+          id="user-ids-input"
+          name="userIds"
+          placeholder="{{MULTIUSER_PLACEHOLDER_USER_IDS}}"
+        />
+      </div>
+      <div class="actions">
+        <button id="start-btn" type="button">{{MULTIUSER_BUTTON_START}}</button>
+        <button id="clear-btn" type="button">{{MULTIUSER_BUTTON_CLEAR}}</button>
+      </div>
+      <pre id="report" class="report"></pre>
+      <div class="status" id="status"></div>
+      <textarea id="log" class="log" readonly></textarea>
+      <div class="allowed-ids">
+        <h3>{{MULTIUSER_ALLOWED_IDS_TITLE}}</h3>
+        <p>
+          {{MULTIUSER_ALLOWED_IDS}}
+        </p>
+      </div>
+    </div>
+
+    <script src="/imagelab/static/multiuser-init.js"></script>
+  </body>
+</html>
