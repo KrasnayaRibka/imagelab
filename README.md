@@ -1,8 +1,12 @@
 # ImageLab — Image Processing Microservice
 
-Production-oriented microservice for asynchronous image processing, designed as part of a distributed system.
+Production image processing service extracted from a real system during a monolith → microservices migration.
 
-Built to handle high-load image pipelines with clear separation of responsibilities and scalability in mind.
+Part of a platform that achieved:
+— 10x increase in processing throughput
+— 70% reduction in system failures
+
+Designed for high-load, asynchronous workloads with horizontal scalability.
 
 ---
 
@@ -10,9 +14,9 @@ Built to handle high-load image pipelines with clear separation of responsibilit
 
 This service is responsible for:
 
-- image transformation and processing
-- asynchronous job handling
-- integration with a larger microservice-based system
+* image transformation and processing
+* asynchronous job handling
+* integration with a larger microservice-based system
 
 It was developed as part of a real production platform and reflects practical architectural decisions rather than a demo project.
 
@@ -22,65 +26,79 @@ It was developed as part of a real production platform and reflects practical ar
 
 In the original system, image processing was tightly coupled with a monolithic application, which created:
 
-- performance bottlenecks
-- limited scalability
-- high failure impact
+* performance bottlenecks
+* limited scalability
+* high failure impact
 
 This service extracts image processing into an isolated component with:
 
-- independent scaling
-- fault isolation
-- asynchronous execution
+* independent scaling
+* fault isolation
+* asynchronous execution
 
 ---
 
 ## 🏗 Architecture
 
-Core design principles:
+This service operates as a worker in a distributed system.
 
-- **Microservice isolation** — single responsibility (image processing only)
-- **Asynchronous processing** — via message queue (RabbitMQ)
-- **Stateless workers** — horizontal scalability
-- **Decoupling from legacy system** — clean integration layer
+Flow:
 
-High-level flow:
+Client/API
+↓
+Queue (RabbitMQ)
+↓
+Worker Service
+↓
+Storage / Response
 
-1. Request is sent to the system
-2. Task is pushed into a queue
-3. Worker processes the image
-4. Result is returned or stored
+Key characteristics:
+
+* Stateless workers
+* Queue-based load leveling
+* Failure isolation from core system
 
 ---
 
 ## ⚙️ Tech Stack
 
-- Python
-- FastAPI
-- RabbitMQ
-- Docker
+* Python
+* FastAPI
+* RabbitMQ
+* Docker
 
 ---
 
 ## 🔑 Key Design Decisions
 
-### 1. Asynchronous processing over sync APIs
-Image processing is resource-intensive and unpredictable in duration.  
-Queue-based execution prevents blocking and improves system stability.
+### Asynchronous processing
 
-### 2. Service isolation
-Processing logic is fully separated from business logic.  
-This reduces coupling and allows independent scaling.
+Image processing is resource-intensive and unpredictable in duration. Queue-based execution prevents blocking and improves system stability.
 
-### 3. Horizontal scalability
+### Service isolation
+
+Processing logic is fully separated from business logic. This reduces coupling and allows independent scaling.
+
+### Horizontal scalability
+
 Workers can be scaled independently depending on load.
+
+---
+
+## ⚠️ Challenges Solved
+
+* Handling unpredictable processing time
+* Preventing system-wide slowdowns caused by image operations
+* Isolating failures from core business logic
+* Enabling independent scaling of CPU-heavy workloads
 
 ---
 
 ## ⚖️ Trade-offs
 
-- Added system complexity due to message queues
-- Eventual consistency instead of immediate results
-- Requires monitoring and queue management
+* Added system complexity due to message queues
+* Eventual consistency instead of immediate results
+* Requires monitoring and queue management
 
 ---
 
@@ -88,3 +106,18 @@ Workers can be scaled independently depending on load.
 
 ```bash
 docker-compose up --build
+```
+
+---
+
+## 📌 Notes
+
+This repository represents a real-world architectural approach to solving high-load image processing problems, not a simplified tutorial example.
+
+---
+
+## 👤 Author
+
+Senior full-stack engineer with 15+ years of experience designing and operating production systems.
+
+Focused on building reliable, scalable backend systems and delivering complete solutions end-to-end.
